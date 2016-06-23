@@ -14,15 +14,28 @@ namespace Seotils\Traits;
 class DeferredExceptionsException extends \Exception {}
 
 /**
- * Local storage for a proper use static variables in trait
+  * Local storage for a proper use of static variables in a trait
  */
 abstract class DeferredExceptionsGlobal {
+
+  /**
+   * Cached classes
+   *
+   * @var array
+   */
   public static $defExcClasses = [];
+
+  /**
+   * Global stack of accumulated exceptions
+   *
+   * @var array
+   */
   public static $defExcErrorsGlobal = [];
   /**
-   * Message for a last occuried exception
+   * Default template for an errors list item
    *
    * @var string
+   * @see Seotils\Traits\DeferredExceptions::throwAll()
    */
   public static $defExcDefaultErrorListTemplate
       = "::time Exception: `::class`, code: #::code, message: ::message";
