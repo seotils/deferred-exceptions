@@ -1,0 +1,22 @@
+{
+    "name": "seotils/deferred-exceptions",
+    "description": "The trait allows you to choose: to throw an exception now, later or simply handle errors. Also it accumulate exceptions of all classes wich use this trait.",
+    "license": "GPL-3.0",
+    "keywords": ["traits", "exceptions", "handle errors"],
+    "homepage": "http://github.com/seotils/deferred-exceptions",
+    "authors": [
+        {
+            "name": "deMagog",
+            "email": "seotils@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.6.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Seotils\\Traits": "src/"
+        }
+    }
+}
