@@ -41,7 +41,7 @@ class SomeClass {
             // throw new SomeClassException('Oh no!');
 
             // Now:
-            $this->exception( 'Record not found #' . $this->id);
+            $this->exception('Oh no!');
         }
     }
 }
@@ -58,10 +58,10 @@ foreach( $list as $item){
 
     // Don't throws exceptions
     $item->useExceptions( false );
+    ...
+    // Calls a "bad" functions
     $item->troubles();
-    ...
     $item->anotherTroubles();
-    ...
     $item->andTroubles();
     ...
     // throws last exception was occured
