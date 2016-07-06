@@ -1,6 +1,6 @@
 <?php
 /**
- * The DeferredExceptions trait allows you to choose: to throw an exception now,
+ * DeferredExceptions trait allows you to choose: to throw an exception now,
  * later or simply handle errors. Also it accumulate exceptions of all classes
  * wich use this trait.
  *
@@ -11,11 +11,14 @@
 
 namespace Seotils\Traits;
 
+/*
+ * Exception-type
+ */
 class DeferredExceptionsException extends \Exception {}
 
 /**
   * Local storage for a proper use of static variables in a trait
- */
+  */
 abstract class DeferredExceptionsGlobal {
 
   /**
@@ -85,14 +88,14 @@ trait DeferredExceptions {
    * @return boolean
    */
   public function useExceptions( $useExceptions = null ){
-    if( is_bool( $useExceptions)){
-      $this->defExcUseExceptions = $useExceptions;
+    if( $useExceptions ){
+      $this->defExcUseExceptions = (bool) $useExceptions;
     }
     return $this->defExcUseExceptions;
   }
 
   /**
-   * Check the class for existance and inheritance from the \Exceptions class
+   * Check the class for existance and inheritance from the \Exception class
    *
    * @param string $className Class name to check
    * @return mixed Class name or NULL
