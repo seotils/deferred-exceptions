@@ -83,12 +83,12 @@ trait DeferredExceptions {
   /**
    * Returns and sets( in defined $useExceptions) the option `useExceptions`: throw exceptions or save to stack
    *
-   * @param boolean $useExceptions Throw exception or save last error
+   * @param boolean $useExceptions Throw exception or save last error. Do not pass the NULL!
    *
    * @return boolean
    */
   public function useExceptions( $useExceptions = null ){
-    if( $useExceptions ){
+    if( null !== $useExceptions ){
       $this->defExcUseExceptions = (bool) $useExceptions;
     }
     return $this->defExcUseExceptions;
