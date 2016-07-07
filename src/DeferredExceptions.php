@@ -265,7 +265,7 @@ trait DeferredExceptions {
    *                              ::code      - exception code
    *                              ::message   - error message
    * </pre>
-   * <b>Example</b> "::microtime Exception: `::class`, code: #::code, message: ::message\n"
+   * <b>Example</b> "::microtime Exception: `::class`, code: #::code, message: ::message"
    *
    * @return boolean Exception stack is not empty
    * @throws Seotils\Traits\DeferredExceptionsException
@@ -347,7 +347,7 @@ trait DeferredExceptions {
           $message .= self::__formatMessage( $error, $template ) . "\n";
         }
         if( $releaseOnThrow ){
-          unset( DeferredExceptionsGlobal::$defExcErrorsGlobal );
+          DeferredExceptionsGlobal::$defExcErrorsGlobal = [];
         }
         $result = count( DeferredExceptionsGlobal::$defExcErrorsGlobal );
         throw new DeferredExceptionsException( $message );

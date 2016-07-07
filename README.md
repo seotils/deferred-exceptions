@@ -82,9 +82,9 @@ foreach( $list as $item){
 }
 ...
 // throws exception with a list of all exceptions of all derived classes.
-DeferredExceptionsGlobal::throwGlobal();
+DeferredExceptions::throwGlobal();
 // or just get a list of exceptions for manual processing
-$exceptions = DeferredExceptionsGlobal::getGlobalExceptions();
+$exceptions = DeferredExceptions::getGlobalExceptions();
 
 ```
 
