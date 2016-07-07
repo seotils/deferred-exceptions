@@ -123,7 +123,7 @@ trait DeferredExceptions {
    * @param string $className The desired class to use
    * @return string
    */
-  protected function getСompatibleClass( $className )
+  protected function getCompatibleClass( $className )
   {
     if( $className ) {
       if( ! $this->checkClassForCompability( $className )){
@@ -153,7 +153,7 @@ trait DeferredExceptions {
    * @throws mixed
    */
   public function exception( $message, $code = 0, $prevException = null, $className = null) {
-    $class = $this->getСompatibleClass( $className );
+    $class = $this->getCompatibleClass( $className );
 
     $this->defExcLastErrorMessage = $message;
     $this->defExcLastError = $code;
@@ -255,7 +255,7 @@ trait DeferredExceptions {
   }
 
   /**
-   * Throws all deferODred exceptions.
+   * Throws all deferred exceptions.
    *
    * @param boolean $releaseOnThrow Release a thrown exceptions. Default TRUE.
    * @param string $template <pre>Template for error list item with fields:
