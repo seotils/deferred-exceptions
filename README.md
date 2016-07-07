@@ -10,7 +10,15 @@ of all classes that use this trait.
 
 DeferredExceptions is open-sourced software licensed under the [GPL-3.0] (https://www.gnu.org/licenses/gpl-3.0.en.html).
 
-### Usage
+## Install
+
+```bash
+composer require seotils/deferred-exceptions
+composer selfupdate
+composer update
+```
+
+## Usage
 
 Let's say we have a problem with the class code.
 Transform it as follows:
@@ -41,7 +49,7 @@ class SomeClass {
             // throw new SomeClassException('Oh no!');
 
             // Now:
-            $this->exception( 'Record not found #' . $this->id);
+            $this->exception('Oh no!');
         }
     }
 }
@@ -54,29 +62,29 @@ And use it:
 <?php
 ...
 foreach( $list as $item){
-    /* @var $item \My\SomeClass */
+    /** @var $item \My\SomeClass */
 
     // Don't throws exceptions
     $item->useExceptions( false );
+    ...
+    // Calls a "bad" functions
     $item->troubles();
-    ...
     $item->anotherTroubles();
-    ...
     $item->andTroubles();
     ...
     // throws last exception was occured
     $item->throwLast();
 
-    // throws an exception with list of all exception was occured
+    // throws an exception with a list of all exception was occured
     // using custom template of each item in list
     $item->throwAll( true, '::class ::code ::message');
 
 }
 ...
-// throws exception with list of all exceptions of all derived classes.
-DeferredExceptions::throwGlobal();
+// throws exception with a list of all exceptions of all derived classes.
+DeferredExceptionsGlobal::throwGlobal();
 // or just get a list of exceptions for manual processing
-$exceptions = DeferredExceptions::getGlobalExceptions();
+$exceptions = DeferredExceptionsGlobal::getGlobalExceptions();
 
 ```
 
