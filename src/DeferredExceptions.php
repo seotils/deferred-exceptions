@@ -34,6 +34,7 @@ abstract class DeferredExceptionsGlobal {
    * @var array
    */
   public static $defExcErrorsGlobal = [];
+
   /**
    * Default template for an errors list item
    *
@@ -125,20 +126,25 @@ trait DeferredExceptions {
    */
   protected function getCompatibleClass( $className )
   {
+    if( null === $className ){
+      $className = get_class();
+    }
+    $parent = get_parent_class( $className );
+
     if( $className ) {
       if( ! $this->checkClassForCompability( $className )){
         $className = $this->checkClassForCompability( $className .'Exception' );
       }
     }
+
     if( ! $className ) {
-      $className = $this->checkClassForCompability( get_class( $this->parent ) );
+      if( $parent ) {
+        $className = $this->getCompatibleClass( $parent );
+      } else {
+        $className = __NAMESPACE__ .'\DeferredExceptionsException';
+      }
     }
-    if( ! $className ) {
-      $className = $this->checkClassForCompability( get_class( $this->parent ) .'Exception' );
-    }
-    if( ! $className ) {
-      $className = __NAMESPACE__ .'\DeferredExceptionsException';
-    }
+
     return $className;
   }
 
@@ -299,7 +305,7 @@ trait DeferredExceptions {
   /**
    * Returns last error message
    *
-   * @return int
+   * @return string
    */
   public function getErrorMessage() {
     return $this->defExcLastErrorMessage;
