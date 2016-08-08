@@ -5,7 +5,7 @@
  * wich use this trait.
  *
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPL-3.0
- * @author deMagog <seotils.gmail.com>
+ * @author deMagog <seotils@gmail.com>
  *
  */
 
@@ -82,14 +82,15 @@ trait DeferredExceptions {
   protected $defExcUseExceptions = true;
 
   /**
-   * Returns and sets( in defined $useExceptions) the option `useExceptions`: throw exceptions or save to stack
+   * Returns and sets( in defined $useExceptions) the option `useExceptions`:
+   * throw an exceptions or save to stack
    *
-   * @param boolean $useExceptions Throw exception or save last error. Do not pass the NULL!
+   * @param boolean $useExceptions Throw exception or save to stack
    *
    * @return boolean
    */
-  public function useExceptions( $useExceptions = null ){
-    if( null !== $useExceptions ){
+  public function useExceptions( $useExceptions = 'undefined' ){
+    if( 'undefined' !== $useExceptions) {
       $this->defExcUseExceptions = (bool) $useExceptions;
     }
     return $this->defExcUseExceptions;
@@ -126,26 +127,24 @@ trait DeferredExceptions {
    */
   protected function getCompatibleClass( $className )
   {
-    if( null === $className ){
+    if( ! $className || ! is_string( $className )){
       $className = get_class();
     }
-    $parent = get_parent_class( $className );
+    $class = $className;
 
-    if( $className ) {
-      if( ! $this->checkClassForCompability( $className )){
-        $className = $this->checkClassForCompability( $className .'Exception' );
-      }
+    if( ! $this->checkClassForCompability( $class )){
+      $class = $this->checkClassForCompability( $class .'Exception' );
     }
 
-    if( ! $className ) {
-      if( $parent ) {
-        $className = $this->getCompatibleClass( $parent );
+    if( ! $class ) {
+      if( $parent = get_parent_class( $className ) ) {
+        $class = $this->getCompatibleClass( $parent );
       } else {
-        $className = __NAMESPACE__ .'\DeferredExceptionsException';
+        $class = __NAMESPACE__ .'\DeferredExceptionsException';
       }
     }
 
-    return $className;
+    return $class;
   }
 
 
@@ -229,12 +228,11 @@ trait DeferredExceptions {
    * @param boolean $releaseOnThrow Release a thrown exception(s). Default TRUE.
    * @param string $template Template with fields
    *
-   * @return boolean Exception stack is not empty
+   * @return boolean The stack of an exceptions is not empty
    * @throws Seotils\Traits\DeferredExceptionsException
    * @throws mixed Other deferred exceptions classes
    */
   protected function __throw( $lastErrorOnly, $releaseOnThrow = true, $template = null) {
-    $result = 0;
     if( ! empty( $this->defExcErrors )) {
       if( ! $lastErrorOnly ) {
         $class = get_class( $this );
@@ -245,11 +243,9 @@ trait DeferredExceptions {
         if( $releaseOnThrow ){
           $this->defExcErrors = [];
         }
-        $result = count( $this->defExcErrors );
         throw new DeferredExceptionsException( $message );
       } else {
         $idx = count( $this->defExcErrors ) - 1;
-        $result = $idx;
         $error = $this->defExcErrors [$idx];
         if( $releaseOnThrow ){
           unset( $this->defExcErrors [$idx] );
@@ -257,11 +253,11 @@ trait DeferredExceptions {
         throw new $error ['class']( $error ['message'], $error ['code'] );
       }
     }
-    return $result > 0 ? true : false;
+    return false;
   }
 
   /**
-   * Throws all deferred exceptions.
+   * Throws exception with a list of all deferred exceptions of a class instance.
    *
    * @param boolean $releaseOnThrow Release a thrown exceptions. Default TRUE.
    * @param string $template <pre>Template for error list item with fields:
@@ -273,7 +269,7 @@ trait DeferredExceptions {
    * </pre>
    * <b>Example</b> "::microtime Exception: `::class`, code: #::code, message: ::message"
    *
-   * @return boolean Exception stack is not empty
+   * @return boolean The stack of an exceptions is not empty
    * @throws Seotils\Traits\DeferredExceptionsException
    * @throws mixed Other deferred exceptions classes
    */
@@ -321,12 +317,49 @@ trait DeferredExceptions {
   }
 
   /**
+   * The class instance has an exceptions
+   *
+   * @return bool
+   */
+  public function hasExceptions() {
+    return ! empty( $this->defExcErrors );
+  }
+
+  /**
+   * Clear the stack of an exceptions of the class instance
+   *
+   * @return void
+   */
+  public function releaseExceptions() {
+    $this->defExcErrors = [];
+  }
+
+
+  /**
    * Returns stack of exceptions for all DeferredExeptioins classes
    *
    * @return array
    */
   public static function getGlobalExceptions() {
     return DeferredExceptionsGlobal::$defExcErrorsGlobal;
+  }
+
+  /**
+   * One or more DeferredExeptioins classes has an exceptions
+   *
+   * @return bool
+   */
+  public static function hasGlobalExceptions() {
+    return ! empty( DeferredExceptionsGlobal::$defExcErrorsGlobal );
+  }
+
+  /**
+   * Clear the stack of an exceptions globally
+   *
+   * @return void
+   */
+  public static function releaseGlobalExceptions() {
+    DeferredExceptionsGlobal::$defExcErrorsGlobal = [];
   }
 
   /**
@@ -342,13 +375,12 @@ trait DeferredExceptions {
    * </pre>
    * <b>Example</b> "::microtime Exception: `::class`, code: #::code, message: ::message"
    *
-   * @return type
+   * @return boolean The global stack of an exceptions is not empty
    * @throws Seotils\Traits\DeferredExceptionsException
    */
   public static function throwGlobal( $releaseOnThrow = false, $template = null ) {
-    $result = 0;
     if( ! empty( DeferredExceptionsGlobal::$defExcErrorsGlobal )) {
-        $message = "The are the following exceptions:\n";
+        $message = "There are the following exceptions:\n";
         foreach( DeferredExceptionsGlobal::$defExcErrorsGlobal as $error) {
           $message .= self::__formatMessage( $error, $template ) . "\n";
         }
@@ -358,7 +390,7 @@ trait DeferredExceptions {
         $result = count( DeferredExceptionsGlobal::$defExcErrorsGlobal );
         throw new DeferredExceptionsException( $message );
     }
-    return $result;
+    return false;
   }
 
 }
