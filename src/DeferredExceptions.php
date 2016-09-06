@@ -97,6 +97,14 @@ trait DeferredExceptions {
   }
 
   /**
+   * Returns count of an instance exceptions
+   * @return int
+   */
+  public function exceptionsCount(){
+    return count( $this->defExcErrors );
+  }
+
+  /**
    * Check the class for existance and inheritance from the \Exception class
    *
    * @param string $className Class name to check
@@ -334,9 +342,16 @@ trait DeferredExceptions {
     $this->defExcErrors = [];
   }
 
+  /**
+   * Returns count of an exceptions for all DeferredExeptioins classes
+   * @return int
+   */
+  public static function exceptionsCountGlobal() {
+    return count( DeferredExceptionsGlobal::$defExcErrorsGlobal );
+  }
 
   /**
-   * Returns stack of exceptions for all DeferredExeptioins classes
+   * Returns stack of an exceptions for all DeferredExeptioins classes
    *
    * @return array
    */
