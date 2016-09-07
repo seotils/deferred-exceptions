@@ -136,7 +136,7 @@ trait DeferredExceptions {
   protected function getCompatibleClass( $className )
   {
     if( ! $className || ! is_string( $className )){
-      $className = get_class();
+      $className = get_class( $this );
     }
     $class = $className;
 
